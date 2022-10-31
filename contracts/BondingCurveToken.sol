@@ -55,7 +55,7 @@ contract BondingCurveToken is
     /// @dev Sale value is computed using linear bonding curve.
     ///      Tokens sold are burned to reduce totalSupply.
     ///      Owner is able to withdraw the 10% loss fee.
-    function sellTokens(uint256 numTokens) external payable nonReentrant {
+    function sellTokens(uint256 numTokens) external nonReentrant {
         if (totalSupply() - numTokens < 0) revert ExceedsMinSupply();
         uint256 sellValue = computeValue(numTokens);
         uint256 sellerClaimable = sellValue * (1 - LOSS_PERC / 100);
