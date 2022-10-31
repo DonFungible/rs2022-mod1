@@ -18,17 +18,6 @@ abstract contract ERC20Sanctions is ERC20 {
         if (isAddressBanned[to]) revert AddressBannedFromReceiving();
     }
 
-    // function _transfer(
-    //     address from,
-    //     address to,
-    //     uint256 amount
-    // ) internal virtual override {
-    //     if (isAddressBanned[from]) revert AddressBannedFromSending();
-    //     if (isAddressBanned[to]) revert AddressBannedFromReceiving();
-
-    //     super._transfer(from, to, amount);
-    // }
-
     function _setBannedAddress(address _address, bool _isBanned)
         internal
         virtual

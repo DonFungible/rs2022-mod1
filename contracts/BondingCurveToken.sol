@@ -21,8 +21,8 @@ contract BondingCurveToken is
     ReentrancyGuard
 {
     uint256 constant MAX_SUPPLY = 100_000_000;
-    // uint256 constant CURVE_SLOPE = 10_000 / 22; // Linear bonding curve: 10k tokens per 1 ether @ 22m supply // ! unable to divide 10000 by 22
-    uint256 constant CURVE_SLOPE_INV = 22_000_000 / 10000; // Linear bonding curve: 10k tokens per 1 ether @ 22m supply
+    // uint256 constant CURVE_SLOPE = 10_000 / 22; // Linear bonding curve: 10k tokens per 1 ether @ 22m supply // ! unable to divide 10000 by 22 therefore use inverse
+    uint256 constant CURVE_SLOPE_INV = 22_000_000 / 10_000; // Linear bonding curve: 10k tokens per 1 ether @ 22m supply
     uint256 constant LOSS_PERC = 10; // Loss percentage when selling tokens back to contract
 
     uint256 public ownerWithdrawable; // Amount that the contract owner can withdraw
@@ -33,12 +33,11 @@ contract BondingCurveToken is
 
     /// @dev Compute value to buy or sell `numTokens` tokens using a linear bonding curve
     ///      by computing the area under the curve:
-    ///         area = 0.5 * x * y
-    ///         (where y = CURVE_SLOPE * x)
-    ///         area2 = 0.5 * (CURVE_SLOPE * (totalSupply() + numTokens) * (totalSupply() + numTokens);
+    ///         area = 0.5 * x * y (where y = CURVE_SLOPE * x)
     ///         area1 = 0.5 * CURVE_SLOPE * totalSupply() * totalSupply();
+    ///         area2 = 0.5 * (CURVE_SLOPE * (totalSupply() + numTokens) * (totalSupply() + numTokens);
     ///         (where CURVE_SLOPE = 1 / CURVE_SLOPE_INV)
-    ///         value = 0.5 * CURVE_SLOPE * (2 * numTokens * totalSupply() + numTokens^2);
+    ///         value = CURVE_SLOPE * (numTokens * totalSupply() + 0.5 * numTokens^2);
     function computeValue(uint256 numTokens) public view returns (uint256) {
         return ((1 / CURVE_SLOPE_INV) *
             (numTokens * totalSupply() + (numTokens * numTokens) / 2));
