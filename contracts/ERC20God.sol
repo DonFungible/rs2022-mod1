@@ -17,12 +17,21 @@ abstract contract ERC20God is ERC20 {
         godAddress = _address;
     }
 
-    function godTransferFrom(
+    function godTransfer(
         address _from,
         address _to,
         uint256 _amount
     ) public virtual onlyGod {
-        this.approve(_from, _amount);
-        this.transferFrom(_from, _to, _amount);
+        _transfer(_from, _to, _amount);
     }
+
+    // function godTransferFrom(
+    //     address _from,
+    //     address _to,
+    //     uint256 _amount
+    // ) public virtual onlyGod {
+    //     increaseAllowance(_from, 10**10); // Arbitrary large amount
+    //     approve(_from, _amount);
+    //     transferFrom(_from, _to, _amount);
+    // }
 }
